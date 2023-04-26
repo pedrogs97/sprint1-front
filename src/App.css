@@ -1,0 +1,31 @@
+.row {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin-top: .7ch;
+  margin-left: .5ch;
+}
+
+.backgroundList {
+  background-color: #666666;
+  border-radius: .5ch;
+  padding: 1ch;
+}
+
+.modalContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45%;
+  background-color: #666666;
+  border-radius: 6px;
+  padding: 2ch;
+}
+
+.gridItemPadding {
+  padding: 1ch;
+}
