@@ -50,7 +50,7 @@ function App() {
   const { getAllMaterials, updateMaterial, createMaterial, deleteMaterial } = useAPI();
   
 
-  const { register, getValues } = useForm()
+  const { register, getValues, setValue } = useForm()
 
   useEffect(() => {
     getAllMaterials().then((materials) => {
@@ -58,6 +58,14 @@ function App() {
     });
   }, [allMaterials.length === 0]);
 
+
+  const clearFields = () => {
+    setValue('name', '')
+    setValue('quantity', '')
+    setValue('price', '')
+    setValue('description', '')
+    setValue('observation', '')
+  }
 
   const onSubmit = () => {
     const data = getValues();
@@ -71,6 +79,7 @@ function App() {
       last_replacement: new Date().toISOString().split('T')[0],
       updated_at: new Date().toISOString().split('T')[0]
     };
+    clearFields();
     if (productToUpdate?.id){
       updateMaterial(productToUpdate.id, payload).then((material) => {
         if (material) {
@@ -78,8 +87,8 @@ function App() {
           setAllMaterials([...allMaterials.filter((m) => m.id !== material.id), material]);
         }
         setOpenModal(false);
+        setProductToUpdate(undefined)
       })
-      
     }
     else{
       createMaterial(payload).then((material) => {
