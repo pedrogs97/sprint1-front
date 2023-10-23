@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, Box, Button, Container, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField, Snackbar, Alert } from "@mui/material";
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import './App.css';
@@ -9,7 +10,6 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { NumericFormat, NumericFormatProps } from "react-number-format";
-import React from "react";
 import { useForm } from "react-hook-form";
 
 interface CustomProps {
@@ -67,15 +67,24 @@ function App() {
     setValue('observation', '')
   }
 
+  function updateItem(material: Material) : void {
+    setValue('name', material.name)
+    setValue('quantity', material.quantity)
+    setValue('price', material.price)
+    setValue('description', material.description)
+    setValue('observation', material.observation)
+  }
+
   const onSubmit = () => {
     const data = getValues();
+    console.log(data)
     const payload: Material = {
       id: productToUpdate ? productToUpdate.id : null,
       name: data.name,
       description: data.description,
       observation: data.observation || '',
       quantity: parseInt(data.quantity),
-      price: parseFloat(data.price.split('$')[1].replace(',', '.')),
+      price: parseFloat(data.price.split('$')[1]?.replace(',', '.') || data.price),
       last_replacement: new Date().toISOString().split('T')[0],
       updated_at: new Date().toISOString().split('T')[0]
     };
@@ -126,7 +135,7 @@ function App() {
           justifyContent="flex-end"
           alignItems="center"
         >
-          <Button variant="contained" color="success" startIcon={<AddCircleIcon />} onClick={() => setOpenModal(true)}>Adicionar</Button>
+          <Button variant="contained" color="success" startIcon={<AddCircleIcon />} onClick={() => { setProductToUpdate(undefined); clearFields(); setOpenModal(true);}}>Adicionar</Button>
         </Grid>
         <List sx={{ width: '100%', minWidth: 800 }}>
           {
@@ -140,6 +149,7 @@ function App() {
                       aria-label="delete" 
                       onClick={() => {
                         setProductToUpdate(material);
+                        updateItem(material)
                         setOpenModal(true);
                         }}>
                       <EditIcon color="secondary"/>
@@ -222,7 +232,6 @@ function App() {
                       label="Nome do produto" 
                       size="small" 
                       variant="standard" 
-                      defaultValue={productToUpdate ? productToUpdate.name : ''}
                       {...register('name')}/>
                   </Grid>
                   <Grid item >
@@ -230,7 +239,6 @@ function App() {
                       label="Descrição do produto" 
                       size="small" 
                       variant="standard" 
-                      defaultValue={productToUpdate ? productToUpdate.description : ''}
                       {...register('description')}
                       multiline
                       style={{ minWidth: '400px' }}
@@ -249,7 +257,6 @@ function App() {
                       label="Observações" 
                       size="small" 
                       variant="standard" 
-                      defaultValue={productToUpdate ? productToUpdate.observation : ''}
                       {...register('observation')}
                       multiline
                       style={{ minWidth: '400px' }}
@@ -278,7 +285,6 @@ function App() {
                       label="Quantidade do produto" 
                       size="small" 
                       variant="standard" 
-                      defaultValue={productToUpdate ? productToUpdate.quantity : ''}
                       {...register('quantity')}/>
                   </Grid>
               </Grid>
